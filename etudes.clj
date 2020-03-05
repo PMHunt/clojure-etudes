@@ -33,6 +33,9 @@
 
 (defn indexed [coll] (map-indexed vector coll))
 
-(defn index-filter [pred coll]
-  (when pred
-    (for [[idx elt] (indexed coll) :when (pred elt)] idx)))
+
+(defn last-cell [x]
+  (list (last x)))
+
+(defn next-to-last [x]
+  (nth (reverse x) 1))
