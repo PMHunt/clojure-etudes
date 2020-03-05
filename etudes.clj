@@ -1,5 +1,7 @@
 (ns clojure-etudes.core
-  (:import (java.text MessageFormat)))
+  (:import (java.text MessageFormat))
+  (:require [clj-time.core :as t]
+            [clj-time.format :as f]))
 
 (defn foo
   "I don't do a whole lot."
@@ -39,3 +41,10 @@
 
 (defn next-to-last [x]
   (nth (reverse x) 1))
+
+(defn time-str
+  "returns a string representation of local date"
+  [dt]
+  (f/unparse
+   (f/with-zone (f/formatter "hh:mm aa") (t/default-time-zone))
+   dt))
