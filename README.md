@@ -1,6 +1,6 @@
 # clojure-etudes
 
-A Clojure library designed to ... well, that part is up to you.
+Practice exercises for Clojure
 
 ## Usage
 
