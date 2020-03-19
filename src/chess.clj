@@ -1,5 +1,7 @@
 (ns joy.chess)
 
+;; represent a chessboard and placement of pieces on it
+
 (defn initial-board []
   [\r \n \b \q \k \b \n \r
    \p \p \p \p \p \p \p \p
@@ -25,8 +27,10 @@
         (* 8)))
 
 (defn- index [file rank]
+  "project the 1d layout onto a 2d chessboard"
   (+ (file-component file) (rank-component rank)))
 
 (defn lookup [board pos]
+  "destructure the standard notation into rank and file and lookup square"
   (let [[file rank] pos]
     (board (index file rank))))
