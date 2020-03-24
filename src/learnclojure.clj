@@ -74,3 +74,25 @@
     (if (pos? x)
       (recur (+ sum x) (dec x))
       sum)))
+
+(def guys-whole-name ["Guy" "Lewis" "Steele"])
+
+(let [[f-name m-name l-name] guys-whole-name]
+  (str l-name ", " f-name " " m-name))
+
+;; 4Clojure #49
+(= (__ 3 [1 2 3 4 5 6]) [[1 2 3] [4 5 6]])
+
+(defn my-split [n coll]
+  [(take n coll) (drop n coll )])
+
+(defrecord recipe [name
+                   ingredients
+                   ])
+
+(def quiche
+  (->recipe "Quiche" '(eggs)))
+
+(def quiche
+  (map->recipe {:name "Quiche"
+                :ingredients '(eggs buttter milk flour salt)}))
