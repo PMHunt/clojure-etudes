@@ -53,3 +53,24 @@
 
 (= (#(map first [%1 %2]) [1 2 3] [:a :b :c]) '(1 :a 2 :b 3 :c))
 ; I think I need to understand 'recur' and/or 'loop' here, vs CAR/CDR recursion
+
+(defn print-down-from [x]
+  "using recur to make a print loop, think of it as a block with 'when' test.
+   Recur takes (dec x) as a parameter and rebinds calling fn param to result,
+   it then passes control back to calling fn (or to loop if you need closure)"
+  (when (pos? x)
+    (println x)
+    (recur (dec x))))
+
+(defn sum-down-from [sum x]
+  "This time we make an accumulator"
+  (if (pos? x)
+    (recur (+ sum x) (dec x))
+    sum))
+
+(defn loopy-sum-down-from [initial-x]
+  "We use loop as a 'let' that's also recur's rebinding target"
+  (loop [sum 0 x initial-x]
+    (if (pos? x)
+      (recur (+ sum x) (dec x))
+      sum)))
