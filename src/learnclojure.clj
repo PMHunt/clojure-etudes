@@ -96,3 +96,20 @@
 (def quiche
   (map->recipe {:name "Quiche"
                 :ingredients '(eggs buttter milk flour salt)}))
+(defn say-hi []
+  (println "Hello from thread " (.getName (Thread/currentThread))))
+
+(dotimes [_ 3]
+  (.start (Thread. say-hi)))
+
+(.toString x)
+;; Java: x.toString()
+
+(.addVector2D v v2)
+;; Java: v.addVector2D(v2)
+
+(require '[clojure.string :as str])
+
+(defn ellipsize [words]
+  (let [[x y z] (str/split words #"\s+")] ; split on whitespace and destruct.
+    (str/join " " [x y z " "])))
