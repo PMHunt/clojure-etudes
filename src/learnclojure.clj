@@ -1,7 +1,6 @@
 (ns learnclojure)
 
-(require '[clojure.repl :refer [doc]]
-         )
+(require '[clojure.repl :refer [doc]])
 
 (print "Hello World")
 
@@ -113,3 +112,67 @@
 (defn ellipsize [words]
   (let [[x y z] (str/split words #"\s+")] ; split on whitespace and destruct.
     (str/join " " [x y z " "])))
+
+(defn punch
+  ([name punch-type]
+   (str "I " punch-type "-punch " name))
+  ([name]
+   (punch name "karate")))
+
+(defn codger [& whippersnappers]
+  (map (fn [ws] (str "Get off my lawn " ws )) whippersnappers))
+
+(defn coords [[x y & rest]]
+  (list x y rest))
+
+(defn receive-treasure-location
+  [{:keys [lat lng] :as treasure-location}]
+  (println (str "Treasure lat: " lat))
+  (println (str "treasure long: " lng))
+  treasure-location)
+
+(defn fac [n]
+  (loop [cnt n acc 1]
+    (if (= cnt 0)
+      acc
+      (recur (- cnt 1) (* cnt acc)))))
+
+(def asym-hobbit-body-parts [{:name "head" :size 3}
+                             {:name "left-eye" :size 1}
+                             {:name "left-ear" :size 1}
+                             {:name "mouth" :size 1}
+                             {:name "nose" :size 1}
+                             {:name "neck" :size 2}
+                             {:name "left-shoulder" :size 3}
+                             {:name "left-upper-arm" :size 3}
+                             {:name "chest" :size 10}
+                             {:name "back" :size 10}
+                             {:name "left-forearm" :size 3}
+                             {:name "abdomen" :size 6}
+                             {:name "left-kidney" :size 1}
+                             {:name "left-hand" :size 2}
+                             {:name "left-knee" :size 2}
+                             {:name "left-thigh" :size 4}
+                             {:name "left-lower-leg" :size 3}
+                             {:name "left-achilles" :size 1}
+                             {:name "left-foot" :size 2}]) ; vector of maps
+
+(defn matching-part
+  "use regex against :name to replace left with right"
+  [part]
+  {:name (clojure.string/replace (:name part) #"^left-" "right-")
+   :size (:size part)})
+
+(defn symmetrize-body-parts
+  "expects seq of maps with :name and :size"
+  [asym-body-parts]
+  (loop [remaining-asym-parts asym-body-parts
+         final-body-parts []]
+    (if (empty? remaining-asym-parts)
+      final-body-parts
+      (let [[part & remaining] remaining-asym-parts]
+        (recur remaining
+               (into final-body-parts
+                     (set [part (matching-part part)])))))))
+
+;; can we translate some of the family tree and haunted house code to this idiom?
