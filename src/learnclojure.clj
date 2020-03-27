@@ -137,6 +137,9 @@
       acc
       (recur (- cnt 1) (* cnt acc)))))
 
+
+;;; ----- hobbit bothering -----------------------
+
 (def asym-hobbit-body-parts [{:name "head" :size 3}
                              {:name "left-eye" :size 1}
                              {:name "left-ear" :size 1}
@@ -194,3 +197,7 @@
       (if (> accumulated-size target)
         part
         (recur remaining (+ accumulated-size (:size (first remaining))))))))
+
+(defn bother-hobbit
+  [asyn-body-parts]
+  (println (str "You bother the hobbit in the " (:name (bother asyn-body-parts)))))
