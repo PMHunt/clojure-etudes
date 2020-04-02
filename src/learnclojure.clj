@@ -178,7 +178,7 @@
                (into final-body-parts
                      (set [part (matching-part part)])))))))
 
-;; can we translate some of the family tree and haunted house code to this idiom?
+;; can we translate some of family tree and haunted house code to this idiom?
 
 (defn better-symmetrize-body-parts
   [asym-body-parts]
@@ -201,3 +201,5 @@
 (defn bother-hobbit
   [asyn-body-parts]
   (println (str "You bother the hobbit in the " (:name (bother asyn-body-parts)))))
+
+;;
