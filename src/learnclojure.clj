@@ -202,4 +202,4 @@
   [asyn-body-parts]
   (println (str "You bother the hobbit in the " (:name (bother asyn-body-parts)))))
 
-;;
+;; core functions

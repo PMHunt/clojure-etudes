@@ -64,3 +64,109 @@
   (map (fn [[date k country-code country-name rc rn confirmed death]]
          [date k country-code country-name rc rn (Long/parseLong confirmed) (Long/parseLong death)])
        covid-world-data-d))
+
+;; Explore data a bit more, how many observations per day?
+
+(def date-frequencies
+  (sort-by first (frequencies (map first covid-world-data-converted))) )
+
+
+;; Helper functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn take-countries [data country-set]
+  (filter (fn [[_ code]] (country-set code)) data))
+
+(defn date-freqs [data]
+  (sort-by first (frequencies (map first data))))
+
+(defn country-freqs [data]
+  (sort-by first (frequencies (map second data))))
+
+(def my-countries
+  (country-freqs
+   (take-countries  covid-world-data-converted
+                    #{"IT" "FR" "ES" "CN" "US" "GB" "DE"})))
+
+;; do some acsii plots
+
+(import 'com.mitchtalmadge.asciidata.graph.ASCIIGraph)
+
+;; Get the results from GB
+;; just the confirmed cases
+;; from the first reported case (ignore the initial zero reports)
+
+(def gb-confirmed
+  (drop-while zero?
+              (map #(nth % 6)
+                   (take-countries covid-world-data-converted #{"GB"}))))
+
+(def gb-deaths
+  (drop-while zero?
+              (map #(nth % 7)
+                   (take-countries covid-world-data-converted #{"GB"}))))
+
+;; use this to print gb-deaths
+(println
+ (.plot (ASCIIGraph/fromSeries (double-array gb-deaths))))
+
+;; We are interested in growth of  cases,
+;; not the absolute numbers.
+;; So use the logarithm of this function
+
+;; A logarithm helper function
+
+(defn logarithm ^double [^double x]
+  (Math/log x))
+
+(println (.plot (ASCIIGraph/fromSeries
+                 (double-array (map logarithm gb-deaths)))))
+
+;; Okay, now we can see the growth over time.
+
+                                        ; Make a helper function from this plotting code
+
+(defn log-plot
+  ""
+  [series-data]
+  (println
+   (.plot (ASCIIGraph/fromSeries
+           (double-array (map logarithm series-data))))))
+
+;; Plotting other countries
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn confirmed-cases
+  "Extracts sequence of confirmed cases for a specified country.
+  Observations before the first case was reported are not included
+  Arguments:
+  Data source as sequence of vectors with confirmed as integer values,
+  Country code as a string
+  Returns: Sequence of confirmed cases as integer values"
+
+  [data-source country-code]
+
+  (drop-while zero? (map #(nth % 3)
+                         (take-countries data-source #{country-code}))) )
+
+;; Explicitly plotting the change
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Show the range of changes of confirmed cases
+
+(defn absolute-plot [series-data]
+  (.plot (ASCIIGraph/fromSeries
+          (double-array series-data))))
+
+(defn abolute-series
+  [data-source country-code]
+  (map #(/ % 1000)
+       (reduce (fn [acc x]
+                 (conj acc (- x (peek acc))))
+               [0]
+               (confirmed-cases data-source country-code))))
+
+(println
+ (absolute-plot
+  (abolute-series covid-world-data-converted "CN")))
