@@ -202,4 +202,14 @@
   [asyn-body-parts]
   (println (str "You bother the hobbit in the " (:name (bother asyn-body-parts)))))
 
-;; core functions
+;; loop & recur
+
+(defn game-loop []
+  (println "loop for game")
+  (let [move (read-line)]
+    (println "your move is " move)
+    (if (= move "exit")
+      "game over"
+      (do
+        (println "Scores were")
+        (recur)))))
