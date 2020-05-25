@@ -87,7 +87,13 @@
           (read-a-legal-move board))
       :else pos)))
 
-(defn y-or-n-p [])
+(defn y-or-n-p []
+  (let [response (read-line)]
+    (if (first (filter #{response} #{"Y" "y" "N" "n"}))
+      response
+      (do
+        (println "Y or N?")
+        (recur)))))
 
 (defn board-full-p [board]
   "tried using contains? but that wants a key"
@@ -95,7 +101,7 @@
 
 (defn find-empty-position [board squares]
   "Find the empty cell in triplet containing target sum"
-  (first (filter #(= 0 (nth @board %)) squares)))(t)
+  (first (filter #(= 0 (nth @board %)) squares)))
 
 (defn win-or-block [board target-sum]
   (let [triplet (first (filter #(= (sum-triplet board % ) target-sum) triplets))]
@@ -154,8 +160,9 @@
 ;; still don't understand recur
 
 (defn play-one-game []
-  "need to figure out how to do y-or-n-p input loop, meanwhile this ... "
-  (let [starter (rand-int 2)]
+  " "
+  (println "Do you want to go first? Y or N?")
+  (let [response (y-or-n-p)]
     (cond
-      (= starter 0) (opponent-move (make-board))
-      (= starter 1) (computer-move (make-board)))))
+      (some #{response} #{"y" "Y"}) (opponent-move (make-board))
+      (some #{response} #{"n" "N"}) (computer-move (make-board)))))
