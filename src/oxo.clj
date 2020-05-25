@@ -4,7 +4,7 @@
 ;;; This is a port of a Common Lisp program, so state is going to be an issue
 
 (defn make-board []
-  "Represent the board as a vector with nine cells, padded vs input off-by-one."
+  "Represent the board as a vector with nine cells, padded vs input-off-by-one."
   (atom  (vector 'board 0 0 0 0 0 0 0 0 0)))
 
 (defn convert-to-letter [v]
@@ -28,7 +28,7 @@
    (println "----------")
    (print-row (nth @board 7) (nth @board 8) (nth @board 9))))
 
-; for REPL testing, need a board
+; for REPL testing, need a board, FIXME need a proper init/reset
 (def game-state (make-board))
 
 (defn make-move [player pos board]
@@ -37,7 +37,7 @@
 
 ;; In Lisp I'd use defparameter, not sure what that would be in Clojure
 ;; These constants are used to represent X and O numerically for scoring
-;; Clojure is unhappy when I use asterisks to denote global constants
+;; Clojure compliation warns when I use asterisks to denote global constants
 (def computer 10)
 (def opponent 1)
 (def triplets
@@ -69,6 +69,7 @@
      (if (empty? input) default input))))
 
 (defn parse-int [s]
+  "Not sure the exception handlng her is right, FIXME"
   (try
     (Integer. s)
     (catch Exception e (str "Invalid input, must be integer"))))
@@ -86,10 +87,32 @@
           (read-a-legal-move board))
       :else pos)))
 
+(defn y-or-n-p [])
 
-(defn board-full-p [board])
+(defn board-full-p [board]
+  "tried using contains? but that wants a key"
+  (not (some #(= 0 %) @board)))
+
+(defn find-empty-position [board squares]
+  "Find the empty cell in triplet containing target sum"
+  (first (filter #(= 0 (nth @board %)) squares)))(t)
+
+(defn win-or-block [board target-sum]
+  (let [triplet (first (filter #(= (sum-triplet board % ) target-sum) triplets))]
+    (when triplet
+      (find-empty-position board triplet))))
+
+(defn make-three-in-a-row [board]
+  "try to return an empty pos in triplet where the computer already has two cells"
+  (let [pos (win-or-block board (* 2 computer))]
+    (and pos (list pos "make three in a row"))))
+
+(defn block-opponent-win [board]
+  (let [pos (win-or-block board (* 2 opponent))]
+    (and pos (list pos "block opponent")) ))
 
 (defn pick-random-empty-position [board]
+  "Used by random-move-strategy"
   (let [pos (+ 1 (rand-int 9))]
     (if (= 0 (nth @board pos))
       pos
@@ -99,8 +122,9 @@
   (list (pick-random-empty-position board) "random move"))
 
 (defn choose-best-move [board]
+  (make-three-in-a-row board)
+  (block-opponent-win board)
   (random-move-strategy board))
-
 
 (defn opponent-move [board]
   (println "Cells are numbered left-right from 1-9 pick one")
