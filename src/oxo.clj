@@ -69,13 +69,13 @@
      (if (empty? input) default input))))
 
 (defn parse-int [s]
-  "Not sure the exception handlng her is right, FIXME"
+  "Not sure the exception handlng here is right, FIXME"
   (try
     (Integer. s)
     (catch Exception e (str "Invalid input, must be integer"))))
 
 (defn read-a-legal-move [board]
-  "dummy data to represent a legal move"
+  "get user input, parse it and give feedback if it's unusable"
   (println "your move")
   (let [pos (parse-int (get-input))]
     (cond
