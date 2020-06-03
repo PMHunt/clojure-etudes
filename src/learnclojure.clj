@@ -213,3 +213,33 @@
       (do
         (println "Scores were")
         (recur)))))
+
+;;; 4Clojure #39
+;; takes two seqs, creates interleaved seq until one seq runs out
+;; FIXME can't work out how to express this as #(stuff) for 4Clojure
+
+(defn interleaf [a b]
+  (let [aseq (seq a) bseq (seq b)]
+    (if (and aseq bseq)
+      (cons (first a) (cons (first b) (lazy-seq (interleaf (rest a) (rest b))))))))
+
+;;; 4Clojure #44
+
+(defn reverso [n x]
+  (loop [count n aseq x]
+    (if (zero? count)
+      aseq
+      (if (< 0 count)
+        (recur (dec count)  (reverse (cons (first aseq) (into () (rest aseq)))))
+        (recur (inc count)  (cons (first (reverse aseq)) (reverse (rest (reverse aseq)))))))))
+
+;; Aerdeth's much better solution to #44
+
+#(let [rot (mod %1 (count %2))]
+   (concat (drop rot %2) (take rot %2)))
+
+(defrecord Recipe [name ingredients cuisine])
+
+(def jambalaya (->Recipe "Jambalaya" {:rice 3 :chicken 4 :fish 3} "Creole"))
+
+(def jalfrezi (map->Recipe {:name "Jalfrezi" :ingredients {:rice 3 :chicken 4 :oil 1} :cuisine "North Indian"}))
