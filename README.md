@@ -1,4 +1,4 @@
-# clojure-etudes
+# clojure-studies
 
 Practice exercises for Clojure
 
