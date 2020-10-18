@@ -15,11 +15,9 @@
   [s calmness-level]
   (println "Clojure Meditate 2.0")
   (println s calmness-level)
-  (if (< calmness-level 5)
-    (println (str (str/upper-case s) "I TELL YA!!!"))
-    (if (<= 5 calmness-level 9)
-      (println (str/capitalize s))
-      (if (= 10 calmness-level)
-        (println (str/reverse s))
-        (println "wrong number")))))
+  (cond
+    (< calmness-level 5) (println (str (str/upper-case s) "I TELL YA!!!"))
+    (<= 5 calmness-level 9) (println (str/capitalize s))
+    (= 10 calmness-level) (println (str/reverse s))
+    :else (println "wrong number")))
     )
