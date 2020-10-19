@@ -48,3 +48,18 @@
   [s]
   (let [number-of-words (count (str/split s #" "))]
     (str/replace s #"\#\d+" (fn [s] (decode-letter s number-of-words)))))
+
+(def phone-numbers ["221 610-5007"
+                    "221 433-4185"
+                    "661 471-3948"
+                    "661 653-4480"
+                    "661 773-8656"
+                    "555 515-0158"])
+
+(defn unique-area-codes
+  "using first with higher order function map"
+  [numbers]
+  (->> numbers
+       (map #(str/split % #" "))
+       (map first)
+       distinct))
