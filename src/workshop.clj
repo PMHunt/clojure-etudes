@@ -63,3 +63,37 @@
        (map #(str/split % #" "))
        (map first)
        distinct))
+
+;; ex 2.06 nested maps
+
+(def gemstone-db {
+                  :ruby {
+                         :name "Ruby"
+                         :stock 480
+                         :sales [1990 6376 4918 7882 6747 7496 8574 6098 2821]
+                         :properties {
+                                      :hardness 9.0
+                                      :refractive-index [1.77 1.78]
+                                      :color "Red"}}
+                  :sapphire {
+                         :name "Sapphire"
+                         :stock 480
+                         :sales [1990 6376 4918 7882 6747 7496 8574 6098 2821]
+                         :properties {
+                                      :hardness 9.0
+                                      :refractive-index [1.77 1.78]
+                                      :color "Blue"}}})
+
+(defn durability
+  "takes gem as a param, returns hardness"
+  [db gemstone-key]
+  (get-in (gemstone-key db) [:properties :hardness]))
+
+(defn change-color
+  [db gemstone-key new-color]
+  (assoc-in db [gemstone-key :properties :color] new-color))
+
+(defn sell-gem
+  [db gemstone-key client-id]
+  (let [updated-db (update-in db [gemstone-key :sales] conj client-id ) ]
+    (update-in updated-db [gemstone-key :stock] dec)) )
