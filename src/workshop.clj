@@ -97,3 +97,12 @@
   [db gemstone-key client-id]
   (let [updated-db (update-in db [gemstone-key :sales] conj client-id ) ]
     (update-in updated-db [gemstone-key :stock] dec)) )
+
+;; Activity 2.01
+
+(def memory-db (atom {}))
+
+(defn read-db [] @memory-db)
+
+;; just overwrite the db, we'd use swap! if we wanted to apply a lambda to it
+(defn write-db [new-db] (reset! memory-db new-db))
