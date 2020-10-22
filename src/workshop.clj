@@ -110,3 +110,7 @@
 (defn create-table
   [table-name]
   (write-db {table-name {:data [] :indexes {}}}))
+
+(defn drop-table
+  [table-name]
+  (reset! memory-db (dissoc @memory-db  table-name)))
