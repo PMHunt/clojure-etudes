@@ -106,3 +106,7 @@
 
 ;; just overwrite the db, we'd use swap! if we wanted to apply a lambda to it
 (defn write-db [new-db] (reset! memory-db new-db))
+
+(defn create-table
+  [table-name]
+  (write-db {table-name {:data [] :indexes {}}}))
