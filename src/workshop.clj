@@ -98,13 +98,13 @@
   (let [updated-db (update-in db [gemstone-key :sales] conj client-id ) ]
     (update-in updated-db [gemstone-key :stock] dec)) )
 
-;; Activity 2.01
+;; Activity 2.01 - in-memory database
 
 (def memory-db (atom {}))
 
 (defn read-db [] @memory-db)
 
-;; just overwrite the db, we'd use swap! if we wanted to apply a lambda to it
+;; just overwrite the db, we'd use swap! if we wanted to apply a # to data
 (defn write-db [new-db] (reset! memory-db new-db))
 
 (defn create-table
@@ -114,3 +114,11 @@
 (defn drop-table
   [table-name]
   (reset! memory-db (dissoc @memory-db  table-name)))
+
+(defn insert
+  "record is #map id-key is a : in the record used as index"
+  [table record id-key]
+  (let [old-db (read-db)
+        new-db (update-in old-db [table :data] conj record)]
+    (write-db (update-in new-db [table :indexes] conj {(id-key (last (get-in new-db [table :data])))
+                                                       (- (count (get-in new-db [table :data])) 1)}))))
