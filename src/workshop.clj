@@ -120,5 +120,6 @@
   [table record id-key]
   (let [old-db (read-db)
         new-db (update-in old-db [table :data] conj record)]
-    (write-db (update-in new-db [table :indexes] conj {(id-key (last (get-in new-db [table :data])))
-                                                       (- (count (get-in new-db [table :data])) 1)}))))
+    (write-db (update-in new-db [table :indexes id-key] conj
+                         {(id-key (last (get-in new-db [table :data])))
+                          (- (count (get-in new-db [table :data])) 1)}))))
