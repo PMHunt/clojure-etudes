@@ -117,9 +117,8 @@
 
 (defn insert
   "record is #map id-key is a : in the record used as index"
-  [table record id-key]
+  [table-name record id-key]
   (let [old-db (read-db)
-        new-db (update-in old-db [table :data] conj record)]
-    (write-db (update-in new-db [table :indexes id-key] conj
-                         {(id-key (last (get-in new-db [table :data])))
-                          (- (count (get-in new-db [table :data])) 1)}))))
+        new-db (update-in old-db [table-name :data] conj record)
+        index (- (count (get-in new-db [table-name :data])) 1)]
+    (write-db (update-in new-db [table-name :indexes id-key] assoc (id-key record) index))))
