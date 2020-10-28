@@ -122,3 +122,16 @@
         new-db (update-in old-db [table-name :data] conj record)
         index (- (count (get-in new-db [table-name :data])) 1)]
     (write-db (update-in new-db [table-name :indexes id-key] assoc (id-key record) index))))
+
+(defn select-*
+  "Return all the records of a table"
+  [table-name]
+  (get (read-db) table-name ))
+
+(defn select-*-where
+  "return record with particular value"
+  [table-name field field-value]
+  (let [records (:data (select-* table-name))
+        indexes (field (:indexes (select-* table-name)))
+        index (get indexes field-value)]
+    (get records index)))
