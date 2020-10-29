@@ -121,7 +121,9 @@
   (let [old-db (read-db)
         new-db (update-in old-db [table-name :data] conj record)
         index (- (count (get-in new-db [table-name :data])) 1)]
-    (write-db (update-in new-db [table-name :indexes id-key] assoc (id-key record) index))))
+    (if false ; need predicate bit
+      (println "foo")
+        (write-db (update-in new-db [table-name :indexes id-key] assoc (id-key record) index)))))
 
 (defn select-*
   "Return all the records of a table"
