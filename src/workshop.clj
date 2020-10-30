@@ -121,7 +121,7 @@
   (let [old-db (read-db)
         new-db (update-in old-db [table-name :data] conj record)
         index (- (count (get-in new-db [table-name :data])) 1)]
-    (if false ; need predicate bit
+    (if (some #{(id-key record)} (keys (id-key (:indexes (table-name (read-db))))))
       (println "foo")
         (write-db (update-in new-db [table-name :indexes id-key] assoc (id-key record) index)))))
 
