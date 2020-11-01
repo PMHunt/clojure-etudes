@@ -33,4 +33,6 @@
 (defn lookup [board pos]
   "destructure the standard notation into rank and file and lookup square"
   (let [[file rank] pos]
+  ;  (println file)
+  ;  (println rank)
     (board (index file rank))))

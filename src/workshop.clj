@@ -120,8 +120,9 @@
   [table-name record id-key]
   (let [old-db (read-db)
         new-db (update-in old-db [table-name :data] conj record)
-        index (- (count (get-in new-db [table-name :data])) 1)]
-    (if (some #{(id-key record)} (keys (id-key (:indexes (table-name old-db)))))
+        index (- (count (get-in new-db [table-name :data])) 1)
+        index-key-list (keys (id-key (:indexes (table-name old-db))))]
+    (if (some #{(id-key record)} index-key-list )
       (println (str "Record with name " (id-key record) " already exists. Exiting."))
         (write-db (update-in new-db [table-name :indexes id-key] assoc (id-key record) index)))))
 
